@@ -2,7 +2,7 @@ import gradio as gr
 import torch
 from ultralytics import YOLO
 from sahi.prediction import ObjectPrediction
-from sahi.utils.cv import visualize_object_predictions
+from sahi.utils.cv import visualize_object_predictions, read_image
 import cv2
 from utils import attempt_download_from_hub
 
@@ -55,10 +55,9 @@ def yolov8_inference(
             )
             object_prediction_list.append(object_prediction)
 
-    image = cv2.imread(image)
+    image = read_image(image)
     output_image = visualize_object_predictions(image=image, object_prediction_list=object_prediction_list)
-    output_image = cv2.cvtColor(output_image['image'], cv2.COLOR_BGR2RGB)
-    return output_image
+    return output_image['image']
         
 
 inputs = [

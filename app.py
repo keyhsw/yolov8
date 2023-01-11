@@ -1,3 +1,4 @@
+import gradio as gr
 import torch
 from ultralytics import YOLO
 from sahi.prediction import ObjectPrediction

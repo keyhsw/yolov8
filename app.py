@@ -1,10 +1,9 @@
 import gradio as gr
 import torch
-from ultralytics import YOLO
 from sahi.prediction import ObjectPrediction
 from sahi.utils.cv import visualize_object_predictions, read_image
 import cv2
-from utils import attempt_download_from_hub
+from yolov8tohf import YOLO
 
 # Images
 torch.hub.download_url_to_file('https://raw.githubusercontent.com/kadirnar/dethub/main/data/images/highway.jpg', 'highway.jpg')
@@ -29,8 +28,7 @@ def yolov8_inference(
     Returns:
         Rendered image
     """
-    hf_model_path = attempt_download_from_hub(model_path)
-    model = YOLO(hf_model_path)
+    model = YOLO(model_path)
     model.conf = conf_threshold
     model.iou = iou_threshold
     prediction = model.predict(image, imgsz=image_size)

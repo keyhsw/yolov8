@@ -2,8 +2,8 @@ import gradio as gr
 import torch
 from sahi.prediction import ObjectPrediction
 from sahi.utils.cv import visualize_object_predictions, read_image
-import cv2
-from yolov8tohf import YOLO
+from ultralytics import YOLO
+from utils import attempt_download_from_hub
 
 # Images
 torch.hub.download_url_to_file('https://raw.githubusercontent.com/kadirnar/dethub/main/data/images/highway.jpg', 'highway.jpg')
@@ -28,7 +28,8 @@ def yolov8_inference(
     Returns:
         Rendered image
     """
-    model = YOLO(model_path)
+    hf_model_path = attempt_download_from_hub(model_path)
+    model = YOLO(hf_model_path)
     model.conf = conf_threshold
     model.iou = iou_threshold
     prediction = model.predict(image, imgsz=image_size)
@@ -60,7 +61,8 @@ def yolov8_inference(
 
 inputs = [
     gr.inputs.Image(type="filepath", label="Input Image"),
-    gr.inputs.Dropdown(["kadirnar/yolov8n-v8.0", "kadirnar/yolov8m-v8.0", "kadirnar/yolov8l-v8.0", "kadirnar/yolov8x-v8.0", "kadirnar/yolov8x6-v8.0"], label="Model"),
+    gr.inputs.Dropdown(["kadirnar/yolov8n-v8.0", "kadirnar/yolov8m-v8.0", "kadirnar/yolov8l-v8.0", "kadirnar/yolov8x-v8.0", "kadirnar/yolov8x6-v8.0"], 
+                       default="kadirnar/yolov8m-v8.0", label="Model"),
     gr.inputs.Slider(minimum=320, maximum=1280, default=640, step=32, label="Image Size"),
     gr.inputs.Slider(minimum=0.0, maximum=1.0, default=0.25, step=0.05, label="Confidence Threshold"),
     gr.inputs.Slider(minimum=0.0, maximum=1.0, default=0.45, step=0.05, label="IOU Threshold"),

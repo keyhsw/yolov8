@@ -1,5 +1,5 @@
 opencv_python
 sahi
 torch
-ultralytics
-yolov8tohf
+ultralytics==8.0.4
+ultralyticsplus==0.0.3

@@ -78,7 +78,6 @@ demo_app = gr.Interface(
     title=title,
     examples=examples,
     cache_examples=True,
-    live=True,
     theme='huggingface',
 )
 demo_app.launch(debug=True, enable_queue=True)

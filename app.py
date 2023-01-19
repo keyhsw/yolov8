@@ -33,25 +33,26 @@ def yolov8_inference(
     results = model.predict(image, imgsz=image_size, return_outputs=True)
     object_prediction_list = []
     for _, image_results in enumerate(results):
-        image_predictions_in_xyxy_format = image_results['det']
-        for pred in image_predictions_in_xyxy_format:
-            x1, y1, x2, y2 = (
-                int(pred[0]),
-                int(pred[1]),
-                int(pred[2]),
-                int(pred[3]),
-            )
-            bbox = [x1, y1, x2, y2]
-            score = pred[4]
-            category_name = model.model.names[int(pred[5])]
-            category_id = pred[5]
-            object_prediction = ObjectPrediction(
-                bbox=bbox,
-                category_id=int(category_id),
-                score=score,
-                category_name=category_name,
-            )
-            object_prediction_list.append(object_prediction)
+        if len(image_results)!=0:
+            image_predictions_in_xyxy_format = image_results['det']
+            for pred in image_predictions_in_xyxy_format:
+                x1, y1, x2, y2 = (
+                    int(pred[0]),
+                    int(pred[1]),
+                    int(pred[2]),
+                    int(pred[3]),
+                )
+                bbox = [x1, y1, x2, y2]
+                score = pred[4]
+                category_name = model.model.names[int(pred[5])]
+                category_id = pred[5]
+                object_prediction = ObjectPrediction(
+                    bbox=bbox,
+                    category_id=int(category_id),
+                    score=score,
+                    category_name=category_name,
+                )
+                object_prediction_list.append(object_prediction)
 
     image = read_image(image)
     output_image = visualize_object_predictions(image=image, object_prediction_list=object_prediction_list)

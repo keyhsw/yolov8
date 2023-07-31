@@ -11,5 +11,3 @@ license: gpl-3.0
 tags:
 - making-demos
 ---
-
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
